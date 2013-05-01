@@ -279,6 +279,24 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 //    if (conn.supportsVideoMaxFrameDuration)
 //        conn.videoMaxFrameDuration = CMTimeMake(1,60);
     
+    _microphone = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    audioInput = [AVCaptureDeviceInput deviceInputWithDevice:_microphone error:nil];
+    if ([_captureSession canAddInput:audioInput])
+    {
+        [_captureSession addInput:audioInput];
+    }
+    audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+    
+    if ([_captureSession canAddOutput:audioOutput])
+    {
+        [_captureSession addOutput:audioOutput];
+    }
+    else
+    {
+        NSLog(@"Couldn't add audio output");
+    }
+    [audioOutput setSampleBufferDelegate:self queue:audioProcessingQueue];
+
     [_captureSession commitConfiguration];
     
 	return self;
@@ -852,48 +870,48 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 #pragma mark -
 #pragma mark Accessors
 
-- (void)setAudioEncodingTarget:(GPUImageMovieWriter *)newValue;
-{
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [_captureSession beginConfiguration];
-        
-        if (newValue == nil)
-        {
-            if (audioOutput)
-            {
-                [_captureSession removeInput:audioInput];
-                [_captureSession removeOutput:audioOutput];
-                audioInput = nil;
-                audioOutput = nil;
-                _microphone = nil;
-            }
-        }
-        else
-        {
-            _microphone = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-            audioInput = [AVCaptureDeviceInput deviceInputWithDevice:_microphone error:nil];
-            if ([_captureSession canAddInput:audioInput])
-            {
-                [_captureSession addInput:audioInput];
-            }
-            audioOutput = [[AVCaptureAudioDataOutput alloc] init];
-            
-            if ([_captureSession canAddOutput:audioOutput])
-            {
-                [_captureSession addOutput:audioOutput];
-            }
-            else
-            {
-                NSLog(@"Couldn't add audio output");
-            }
-            [audioOutput setSampleBufferDelegate:self queue:audioProcessingQueue];
-        }
-        
-        [_captureSession commitConfiguration];
-        
-        [super setAudioEncodingTarget:newValue];
-    });
-}
+//- (void)setAudioEncodingTarget:(GPUImageMovieWriter *)newValue;
+//{
+//    runSynchronouslyOnVideoProcessingQueue(^{
+//        [_captureSession beginConfiguration];
+//        
+//        if (newValue == nil)
+//        {
+//            if (audioOutput)
+//            {
+//                [_captureSession removeInput:audioInput];
+//                [_captureSession removeOutput:audioOutput];
+//                audioInput = nil;
+//                audioOutput = nil;
+//                _microphone = nil;
+//            }
+//        }
+//        else
+//        {
+//            _microphone = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+//            audioInput = [AVCaptureDeviceInput deviceInputWithDevice:_microphone error:nil];
+//            if ([_captureSession canAddInput:audioInput])
+//            {
+//                [_captureSession addInput:audioInput];
+//            }
+//            audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+//            
+//            if ([_captureSession canAddOutput:audioOutput])
+//            {
+//                [_captureSession addOutput:audioOutput];
+//            }
+//            else
+//            {
+//                NSLog(@"Couldn't add audio output");
+//            }
+//            [audioOutput setSampleBufferDelegate:self queue:audioProcessingQueue];
+//        }
+//        
+//        [_captureSession commitConfiguration];
+//        
+//        [super setAudioEncodingTarget:newValue];
+//    });
+//}
 
 - (void)updateOrientationSendToTargets;
 {

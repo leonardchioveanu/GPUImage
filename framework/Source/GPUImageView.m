@@ -135,6 +135,8 @@
             [self destroyDisplayFramebuffer];
             [self createDisplayFramebuffer];
         });
+        
+        [self recalculateViewGeometry];
     }
 }
 
@@ -270,6 +272,9 @@
 //        -1.0f,  1.0f,
 //        1.0f,  1.0f,
 //    };
+    
+    // hack render the previous frame
+    [self newFrameReadyAtTime:kCMTimeZero atIndex:0];
 }
 
 - (void)setBackgroundColorRed:(GLfloat)redComponent green:(GLfloat)greenComponent blue:(GLfloat)blueComponent alpha:(GLfloat)alphaComponent;

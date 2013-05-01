@@ -27,8 +27,6 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 
     GLuint inputTextureForMovieRendering;
     
-    GLubyte *frameData;
-    
     CMTime startTime, previousFrameTime;
     
     BOOL isRecording;
@@ -133,11 +131,6 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
 - (void)dealloc;
 {
     [self destroyDataFBO];
-
-    if (frameData != NULL)
-    {
-        free(frameData);
-    }
 }
 
 #pragma mark -
@@ -148,9 +141,7 @@ NSString *const kGPUImageColorSwizzlingFragmentShaderString = SHADER_STRING
     isRecording = NO;
     
     self.enabled = YES;
-    frameData = (GLubyte *) malloc((int)videoSize.width * (int)videoSize.height * 4);
 
-//    frameData = (GLubyte *) calloc(videoSize.width * videoSize.height * 4, sizeof(GLubyte));
     NSError *error = nil;
     assetWriter = [[AVAssetWriter alloc] initWithURL:movieURL fileType:fileType error:&error];
     if (error != nil)

@@ -158,7 +158,7 @@
     if (programFromCache == nil)
     {
         programFromCache = [[GLProgram alloc] initWithVertexShaderString:vertexShaderString fragmentShaderString:fragmentShaderString];
-        [shaderProgramCache setObject:programFromCache forKey:lookupKeyForShaderProgram];
+//        [shaderProgramCache setObject:programFromCache forKey:lookupKeyForShaderProgram];
     }
     
     return programFromCache;
